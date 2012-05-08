@@ -40,7 +40,7 @@ h3. Preparing Schema:
 h3. Testing That Dashboard is Working:
 <pre><code>$ sudo -u puppet-dashboard ./script/server -e production</code></pre>
 
-It uses Ruby’s built-in WEBrick server (shouldn't be used on a production enviroment).
+It uses Ruby’s built-in WEBrick server (shouldn't be used on a production environment).
 
 
 h3. Using Dashboard for Reports (puppet 2.6.0 or newer):
@@ -79,7 +79,7 @@ To start one worker process and the monitor process:
 
 h3. Serving Dashboard With Passenger and Apache:
 
-Ensure that Apache 2.2 and Phusion Passenger are installed (<a href="http://www.modrails.com/install.html">Passenger installation instructions</a>.
+Ensure that Apache 2.2 and Phusion Passenger are installed (<a href="http://www.modrails.com/install.html">Passenger installation instructions)</a>.
 
 Resuming the Passenger installation in our case:
 <pre><code>yum install http://passenger.stealthymonkeys.com/rhel/6/passenger-release.noarch.rpm
