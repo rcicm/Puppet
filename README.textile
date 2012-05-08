@@ -28,7 +28,7 @@ h3. Starting the Puppet Master:
 
 <pre><code>#Start puppet master and enable startup on boot
 $ sudo service puppetmaster start
-$ sudo chkconfig puppetmaster on </pre></code>
+$ sudo chkconfig puppetmaster on </code></pre>
 
 
 h3. Installing Puppet Client:
@@ -47,6 +47,9 @@ PUPPET_LOG=/var/log/puppet/puppet.log
  
 # You may specify other parameters to the puppet client here
 PUPPET_EXTRA_OPTS=--waitforcert=30</code></pre>
+
+
+
 
 
 h3. Starting the Puppet Client:
