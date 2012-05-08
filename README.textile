@@ -8,7 +8,7 @@ h3. Installing Puppet Master:
 <pre><code>$ sudo yum install puppet-server</code></pre>
 
 Create te file "/etc/puppet/manifests/site.pp" and insert the content below:
-<pre><code> import "classes/*"
+<pre><code>import "classes/*"
  
 node default {
     include sudo
@@ -21,7 +21,7 @@ Create the file "/etc/puppet/manifests/classes/sudo.pp" and insert the content b
         group => "root",
         mode  => 440,
     }
-}</pre></code>
+}</code></pre>
 
 
 h3. Starting the Puppet Master:
