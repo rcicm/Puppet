@@ -12,7 +12,7 @@ h3. Configuring Puppet Dashboard:
 
 Generate the config files from the samples:
 <pre><code>$ cp config/database.yml.sample config/database.yml
-$ cp config/settings.yml.sample config/settings.yml</pre></code>
+$ cp config/settings.yml.sample config/settings.yml</code></pre>
 
 In the database.yml file, change the username/pass and database you'll use.
 
