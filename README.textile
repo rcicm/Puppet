@@ -1,0 +1,80 @@
+h1. How to install Puppet Server on CentOS
+
+Reference: http://puppetlabs.com/puppet/puppet-open-source/
+
+
+h3. Installing Puppet Master:
+
+<pre><code>$ sudo yum install puppet-server</code></pre>
+
+Create te file "/etc/puppet/manifests/site.pp" and insert the content below:
+<pre><code> import "classes/*"
+ 
+node default {
+    include sudo
+ }</pre></code>
+
+Create the file "/etc/puppet/manifests/classes/sudo.pp" and insert the content below:
+<pre><code>class sudo {
+    file { "/etc/sudoers":
+        owner => "root",
+        group => "root",
+        mode  => 440,
+    }
+}</pre></code>
+
+
+h3. Starting the Puppet Master:
+
+<pre><code>#Start puppet master and enable startup on boot
+$ sudo service puppetmaster start
+$ sudo chkconfig puppetmaster on </pre></code>
+
+
+h3. Installing Puppet Client:
+
+<pre><code>$ sudo yum install puppet</code></pre>
+
+Edit the file "/etc/sysconfig/puppet" to looks like below:
+<pre><code># The puppetmaster server
+PUPPET_SERVER=[YOUR_PuppetMaster_DNS]
+ 
+# If you wish to specify the port to connect to do so here
+PUPPET_PORT=8140
+ 
+# Where to log to. Specify syslog to send log messages to the system log.
+PUPPET_LOG=/var/log/puppet/puppet.log
+ 
+# You may specify other parameters to the puppet client here
+PUPPET_EXTRA_OPTS=--waitforcert=30</code></pre>
+
+
+h3. Starting the Puppet Client:
+
+<pre><code>#Start puppet client and enable startup on boot
+$ sudo service puppet start
+$ sudo chkconfig puppet on</code></pre>
+
+
+h3. Signing the SSL key from the Puppet Client (in the Puppet Master server):
+<pre><code>$ sudo puppetca --list
+  puppetclient.localdomain
+$ sudo puppetca --sign puppetclient.localdomain</code></pre>
+
+
+h3. Setting Puppet Master to autosign keys (not recommended):
+
+Insert in the file "/etc/puppet/autosign.conf" the content like the example below:
+<pre><code>*.yourinternaldomain.com</code></pre>
+
+
+h3. Run the puppet agent at the client to apply the roles:
+
+<pre><code>$ sudo puppet agent --server puppetmaster.my.localdomain -t</code></pre>
+
+
+
+h2. Author:
+
+Rafael Inocencio <rafael_rci@yahoo.com.br>
+https://github.com/rcicm

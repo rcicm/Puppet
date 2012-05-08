@@ -1,0 +1,95 @@
+h1. How to install Puppet Dashboard on CentOS6
+
+Reference: http://docs.puppetlabs.com/dashboard/manual/1.2/bootstrapping.html
+
+
+h3. Installing Puppet Dashboard:
+
+<pre><code>$ sudo yum install puppet-dashboard</code></pre>
+
+
+h3. Configuring Puppet Dashboard:
+
+Generate the config files from the samples:
+<pre><code>$ cp config/database.yml.sample config/database.yml
+$ cp config/settings.yml.sample config/settings.yml</pre></code>
+
+In the database.yml file, change the username/pass and database you'll use.
+
+
+h3. Configuring the Database in MySQL Server:
+
+Connect at MySQL and create a user/password and the Database (Remember to use the user/pass and database specified on database.yml):
+<pre><code>CREATE DATABASE dashboard CHARACTER SET utf8;
+CREATE USER 'dashboard'@'localhost' IDENTIFIED BY 'my_password';
+GRANT ALL PRIVILEGES ON dashboard.* TO 'dashboard'@'localhost';</code></pre>
+
+Tuning MySQL to permit larger rows in the database.
+Edit the file /etc/my.cnf and add the lines below:
+<pre><code># Allowing 32MB allows an occasional 17MB row with plenty of spare room
+max_allowed_packet = 32M</code></pre>
+
+Restart MySQL for this settings to take effect.
+
+
+h3. Preparing Schema:
+
+<pre><code>$ rake RAILS_ENV=production db:migrate</code></pre>
+
+
+h3. Testing That Dashboard is Working:
+<pre><code>$ sudo -u puppet-dashboard ./script/server -e production</code></pre>
+
+It uses Ruby’s built-in WEBrick server (shouldn't be used on a production enviroment).
+
+
+h3. Using Dashboard for Reports (puppet 2.6.0 or newer):
+
+Turn reporting on (on each agent): 
+<pre><code>#   puppet.conf (on each agent)
+  [agent]
+    report = true</code></pre>
+
+Add the http report handler to your puppet master’s reports setting and set reporturl to your Dashboard instance’s reports/upload URL:
+<pre><code>#   puppet.conf (on puppet master)
+  [master]
+    reports = store, http
+    reporturl = http://dashboard.example.com:3000/reports/upload</code></pre>
+
+
+h3. Using Dashboard for Node Classification:
+
+<pre><code># puppet.conf (on puppet master)
+[master]
+  node_terminus = exec
+  external_nodes = /usr/bin/env PUPPET_DASHBOARD_URL=http://dashboard.example.com:3000 /usr/share/puppet-dashboard/bin/external_node </code></pre>
+
+
+h3. Testing Puppet’s Connection to Dashboard:
+
+After restarting puppet master, you can run one of your puppet agents with:
+<pre><code>$ puppet agent --server puppetmaster.my.localdomain --test --noop</code></pre>
+
+
+h3. Starting and Managing Delayed Job Workers:
+
+To start one worker process and the monitor process:
+<pre><code># env RAILS_ENV=production script/delayed_job -p dashboard -n 1 -m start</code></pre>
+
+
+h3. Serving Dashboard With Passenger and Apache:
+
+Ensure that Apache 2.2 and Phusion Passenger are installed (<a href="http://www.modrails.com/install.html">Passenger installation instructions</a>.
+
+Resuming the Passenger installation in our case:
+<pre><code>yum install http://passenger.stealthymonkeys.com/rhel/6/passenger-release.noarch.rpm
+yum install mod_passenger</code></pre>
+
+Once Passenger is enabled, copy Dashboard’s example vhost from ext/dashboard-vhost.conf into Apache’s sites-enabled directory and edit it to match your Dashboard installation.
+
+
+
+h2. Author:
+
+Rafael Inocencio <rafael_rci@yahoo.com.br>
+https://github.com/rcicm
