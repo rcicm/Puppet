@@ -1,4 +1,4 @@
-h1. How to install Puppet Server on CentOS
+h1. How to install Puppet Server on CentOS6
 
 Reference: http://puppetlabs.com/puppet/puppet-open-source/
 
